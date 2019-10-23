@@ -12,7 +12,8 @@ config :nezzer, NezzerWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "hHA93s/K3R+xf3mDknPNkT9JCjBnXF65F7awN5fG3RRyIbn6v4OEhoZlv21l1WTx",
   render_errors: [view: NezzerWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Nezzer.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Nezzer.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [signing_salt: "SALTY"]
 
 # Configures Elixir's Logger
 config :logger, :console,
