@@ -71,8 +71,8 @@ defmodule NezzerWeb.NoiseLive do
   end
 
   def explode_cells(socket) do
-    socket.assigns.cells
-    # |> Enum.map(fn {k, v} -> {Integer.to_string(k), v} end)
-    |> Enum.reduce(socket, fn {k, v}, s -> assign(s, :"c#{k}", v) end)
+    kw_cells = Enum.map(socket.assigns.cells, fn {k, v} -> {:"c#{k}", v} end)
+
+    assign(socket, kw_cells)
   end
 end
