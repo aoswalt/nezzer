@@ -18,6 +18,8 @@ defmodule NezzerWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    live "/noise", NoiseLive
   end
 
   # Other scopes may use custom stacks.
