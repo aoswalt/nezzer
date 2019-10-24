@@ -2,21 +2,29 @@ defmodule NezzerWeb.NoiseLive do
   use Phoenix.LiveView
 
   @frame_time 16
-  @resolution {50, 20}
+  @resolution {10, 10}
+
+  defp to_pixel_tag(x, y), do: "p#{x}_#{y}"
 
   defmacro pixel_divs() do
-    @resolution
-    |> elem(1)
-    |> (&Range.new(0, &1)).()
-    |> Enum.map(&"<div class=\"pixel\" style=\"background: <%= @c#{&1} %>\"></div>")
-    |> Enum.join("")
-    |> (&"<div class=\"screen\">#{&1}</div>").()
-    |> EEx.compile_string(engine: Phoenix.LiveView.Engine)
+    {width, height} = @resolution
+
+    # pixel_div_elemnts = for x <- 0..width, y <- 0..height do
+    pixel_div_elemnts = for x <- 0..width do
+      ~s[<div class="pixel" style="background: <%= @c#{x} %>"></div>]
+    end
+
+    with_container = ~s"""
+    <div class="screen">
+      #{Enum.join(pixel_div_elemnts, "")}
+    </div>
+    """
+
+    EEx.compile_string(with_container, engine: Phoenix.LiveView.Engine)
   end
 
-
   def render(assigns) do
-    # """
+    # ~L"""
     # <div class="screen">
     #   <div class="pixel" style="background: <%= @c0 %>"></div>
     #   <div class="pixel" style="background: <%= @c1 %>"></div>
@@ -47,7 +55,8 @@ defmodule NezzerWeb.NoiseLive do
 
   def mount(_session, socket) do
     {_, height} = @resolution
-    cells = 0..height |> Map.new(fn n -> {n, "black"} end) |> Map.put(2, "lime")
+    cells = 0..height |> Map.new(fn n -> {n, "black"} end) |> Map.put(2, "lime") |> Map.put(3, "lime")
+    # cells = 0..height |> Map.new(fn n -> {n, Enum.random(["black", "lime"])} end)
 
     new_socket = socket |> assign(:cells, cells) |> explode_cells()
 
